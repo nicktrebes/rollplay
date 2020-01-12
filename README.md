@@ -1,2 +1,2 @@
 # rollplay
-Tabletop Role-Playing Character Sheets 
+Tabletop Role-Playing Character Sheet Editor
