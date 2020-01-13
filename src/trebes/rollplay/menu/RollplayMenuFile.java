@@ -23,10 +23,13 @@
  * SOFTWARE.
  */
 
-package trebes.rollplay.app;
+package trebes.rollplay.menu;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
+import trebes.rollplay.app.RollplayApp;
+import trebes.rollplay.app.RollplayContent;
 
 @SuppressWarnings("serial")
 public class RollplayMenuFile extends JMenu {
@@ -36,8 +39,10 @@ public class RollplayMenuFile extends JMenu {
 	private FileSaveAll saveAll;
 	private FileSaveAs saveAs;
 	
-	public RollplayMenuFile(RollplayContent content) {
+	public RollplayMenuFile(RollplayApp app) {
 		super("File");
+		
+		RollplayContent content = app.getContent();
 		
 		add(new FileNew(content));
 		add(new FileOpen(content));
@@ -71,7 +76,6 @@ public class RollplayMenuFile extends JMenu {
 			super("Close");
 			addActionListener(content);
 			setActionCommand(RollplayContent.FILE_CLOSE);
-			setEnabled(false);
 		}
 	}
 	
@@ -80,7 +84,6 @@ public class RollplayMenuFile extends JMenu {
 			super("Close All");
 			addActionListener(content);
 			setActionCommand(RollplayContent.FILE_CLOSE_ALL);
-			setEnabled(false);
 		}
 	}
 	
@@ -112,7 +115,6 @@ public class RollplayMenuFile extends JMenu {
 		public FileSave(RollplayContent content) {
 			super("Save");
 			setActionCommand(RollplayContent.FILE_SAVE);
-			setEnabled(false);
 		}
 	}
 	
@@ -121,7 +123,6 @@ public class RollplayMenuFile extends JMenu {
 			super("Save All");
 			addActionListener(content);
 			setActionCommand(RollplayContent.FILE_SAVE_ALL);
-			setEnabled(false);
 		}
 	}
 	
@@ -130,7 +131,6 @@ public class RollplayMenuFile extends JMenu {
 			super("Save As...");
 			addActionListener(content);
 			setActionCommand(RollplayContent.FILE_SAVE_AS);
-			setEnabled(false);
 		}
 	}
 }

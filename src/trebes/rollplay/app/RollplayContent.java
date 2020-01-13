@@ -28,15 +28,16 @@ package trebes.rollplay.app;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
-public class RollplayContent extends JTabbedPane implements ActionListener {
-	private RollplayMenuBar menu;
+public class RollplayContent extends JTabbedPane implements ActionListener, ChangeListener {
+	private RollplayApp app;
 	
-	public RollplayContent() {
-		menu = null;
-		
-		addTab(new RollplayWelcome(this));
+	public RollplayContent(RollplayApp app) {
+		this.app = app;
+		addChangeListener(this);
 	}
 	
 	@Override
@@ -60,14 +61,16 @@ public class RollplayContent extends JTabbedPane implements ActionListener {
 			fileSaveAll();
 		} else if (command.contentEquals(FILE_SAVE_AS)) {
 			fileSaveAs();
+		} else if (command.contentEquals(HELP_WELCOME)) {
+			addTab(new RollplayWelcome(app));
 		}
 	}
 	
 	public void addTab(RollplayTab tab) {
-		String title = tab.getTitle();
-		addTab(title,tab);
-		int index = indexOfTab(title);
+		add(tab);
+		int index = indexOfComponent(tab);
 		setTabComponentAt(index,tab.getHeader());
+		tab.onFocus();
 	}
 	
 	public boolean fileClose() {
@@ -98,8 +101,11 @@ public class RollplayContent extends JTabbedPane implements ActionListener {
 		
 	}
 	
-	public void setMenuBar(RollplayMenuBar menu) {
-		this.menu = menu;
+	@Override
+	public void stateChanged(ChangeEvent event) {
+		if (getTabCount() == 0) {
+			System.exit(0);
+		}
 	}
 	
 	public static final String FILE_CLOSE = "fc";
@@ -110,4 +116,5 @@ public class RollplayContent extends JTabbedPane implements ActionListener {
 	public static final String FILE_SAVE = "fs";
 	public static final String FILE_SAVE_ALL = "fsa";
 	public static final String FILE_SAVE_AS = "fsas";
+	public static final String HELP_WELCOME = "hw";
 }

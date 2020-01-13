@@ -23,25 +23,14 @@
  * SOFTWARE.
  */
 
-package trebes.rollplay.app;
+package trebes.rollplay.menu;
 
-import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 @SuppressWarnings("serial")
-public class RollplayMenuBar extends JMenuBar {
-	private RollplayMenuEdit edit;
-	private RollplayMenuFile file;
-	
-	public RollplayMenuBar(RollplayContent content) {
-		add(file = new RollplayMenuFile(content));
-		add(edit = new RollplayMenuEdit());
-	}
-	
-	public RollplayMenuEdit getMenuEdit() {
-		return edit;
-	}
-	
-	public RollplayMenuFile getMenuFile() {
-		return file;
+public class RollplayMenuEdit extends JMenu {
+	public RollplayMenuEdit() {
+		super("Edit");
 	}
 }

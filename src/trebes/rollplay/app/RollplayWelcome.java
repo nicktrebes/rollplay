@@ -25,10 +25,13 @@
 
 package trebes.rollplay.app;
 
+import trebes.rollplay.menu.RollplayMenuBar;
+import trebes.rollplay.menu.RollplayMenuFile;
+
 @SuppressWarnings("serial")
 public class RollplayWelcome extends RollplayTab {
-	public RollplayWelcome(RollplayContent content) {
-		super(content,"Welcome!");
+	public RollplayWelcome(RollplayApp app) {
+		super(app,"Welcome!");
 	}
 	
 	@Override public boolean close() { return true; }
@@ -36,4 +39,12 @@ public class RollplayWelcome extends RollplayTab {
 	@Override public boolean isFile() { return false; }
 	@Override public boolean save() { return false; }
 	@Override public boolean saveAs() { return false; }
+	
+	@Override
+	public void onFocus() {
+		RollplayMenuBar menuBar = app.getMenuBar();
+		
+		RollplayMenuFile menuFile = menuBar.getMenuFile();
+		menuFile.setFileOpen(false);
+	}
 }

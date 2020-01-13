@@ -28,30 +28,43 @@ package trebes.rollplay.app;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public abstract class RollplayTab extends JPanel implements ActionListener {
+public abstract class RollplayTab extends JPanel implements ActionListener, FocusListener {
 	private Header header;
-	protected RollplayContent content;
+	protected RollplayApp app;
 	
-	public RollplayTab(RollplayContent content, String title) {
+	public RollplayTab(RollplayApp app, String title) {
 		header = new Header(this,title);
-		this.content = content;
+		this.app = app;
+		addFocusListener(this);
 	}
 	
+	@Override public void focusLost(FocusEvent event) {}
+	public abstract void onFocus();
 	public abstract boolean close();
 	public abstract boolean isEdited();
 	public abstract boolean isFile();
 	public abstract boolean save();
 	public abstract boolean saveAs();
 	
+	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getActionCommand().contentEquals(CLOSE_TAB)) {
-			content.remove(this);
+			if (close()) {
+				app.getContent().remove(this);
+			}
 		}
+	}
+	
+	@Override
+	public void focusGained(FocusEvent event) {
+		onFocus();
 	}
 	
 	public JPanel getHeader() {

@@ -27,20 +27,33 @@ package trebes.rollplay.app;
 
 import java.awt.Toolkit;
 import javax.swing.JFrame;
+import trebes.rollplay.menu.RollplayMenuBar;
 
-@SuppressWarnings("serial")
-public class RollplayApp extends JFrame {
+public class RollplayApp {
+	private RollplayContent content;
+	private RollplayMenuBar menuBar;
+	
 	public RollplayApp() {
-		super(getAppTitle());
+		content = new RollplayContent(this);
+		menuBar = new RollplayMenuBar(this);
+
+		RollplayTab welcomeTab = new RollplayWelcome(this);
+		content.addTab(welcomeTab);
+		welcomeTab.onFocus();
 		
-		RollplayContent content = new RollplayContent();
-		RollplayMenuBar menu = new RollplayMenuBar(content);
-		content.setMenuBar(menu);
-		
-		setContentPane(content);
-		setJMenuBar(menu);
-		setSize(Toolkit.getDefaultToolkit().getScreenSize());
-		setVisible(true);
+		JFrame frame = new JFrame(getAppTitle());
+		frame.setContentPane(content);
+		frame.setJMenuBar(menuBar);
+		frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		frame.setVisible(true);
+	}
+	
+	public RollplayContent getContent() {
+		return content;
+	}
+	
+	public RollplayMenuBar getMenuBar() {
+		return menuBar;
 	}
 	
 	public static final int VERSION_MAJOR = 0;
