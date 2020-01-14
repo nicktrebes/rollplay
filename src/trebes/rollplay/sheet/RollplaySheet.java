@@ -23,45 +23,24 @@
  * SOFTWARE.
  */
 
-package trebes.rollplay.data;
+package trebes.rollplay.sheet;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
-import javax.swing.JTextField;
+import java.io.File;
+import trebes.rollplay.app.RollplayApp;
+import trebes.rollplay.app.RollplayTab;
 
 @SuppressWarnings("serial")
-public class RollplayDataString extends JTextField implements FocusListener, RollplayData {
-	public RollplayDataString() {
-		addFocusListener(this);
+public abstract class RollplaySheet extends RollplayTab {
+	protected File file;
+	
+	public RollplaySheet(RollplayApp app, File file) {
+		super(app,file.getName());
+		this.file = file;
 	}
 	
-	@Override
-	public void read(DataInputStream input) throws IOException {
-		byte[] data = new byte[input.readInt()];
-		input.read(data);
-		setText(new String(data));
-	}
-
-	@Override
-	public void write(DataOutputStream output) throws IOException {
-		byte[] data = getText().getBytes();
-		output.writeInt(data.length);
-		output.write(data);
-	}
-
-	@Override
-	public void focusGained(FocusEvent event) {
-		setSelectionStart(0);
-		setSelectionEnd(getText().length());
-	}
-
-	@Override
-	public void focusLost(FocusEvent event) {
-		setSelectionStart(0);
-		setSelectionEnd(0);
+	@Override public boolean isFile() { return true; }
+	
+	public static RollplaySheet open(RollplayApp app, File file) {
+		return null; // TODO
 	}
 }

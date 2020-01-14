@@ -27,9 +27,13 @@ package trebes.rollplay.app;
 
 import java.awt.Toolkit;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import trebes.rollplay.menu.RollplayMenuBar;
 
 public class RollplayApp {
+	private JFrame frame;
 	private RollplayContent content;
 	private RollplayMenuBar menuBar;
 	
@@ -37,11 +41,9 @@ public class RollplayApp {
 		content = new RollplayContent(this);
 		menuBar = new RollplayMenuBar(this);
 
-		RollplayTab welcomeTab = new RollplayWelcome(this);
-		content.addTab(welcomeTab);
-		welcomeTab.onFocus();
+		content.addTab(new RollplayWelcome(this));
 		
-		JFrame frame = new JFrame(getAppTitle());
+		frame = new JFrame(getAppTitle());
 		frame.setContentPane(content);
 		frame.setJMenuBar(menuBar);
 		frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
@@ -50,6 +52,10 @@ public class RollplayApp {
 	
 	public RollplayContent getContent() {
 		return content;
+	}
+	
+	public JFrame getFrame() {
+		return frame;
 	}
 	
 	public RollplayMenuBar getMenuBar() {
@@ -64,6 +70,14 @@ public class RollplayApp {
 	}
 	
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel(
+				UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException
+			| InstantiationException
+			| IllegalAccessException
+			| UnsupportedLookAndFeelException exception) {}
+		
 		new RollplayApp();
 	}
 }

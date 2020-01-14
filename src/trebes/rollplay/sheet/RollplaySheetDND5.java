@@ -23,45 +23,47 @@
  * SOFTWARE.
  */
 
-package trebes.rollplay.data;
+package trebes.rollplay.sheet;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
-import javax.swing.JTextField;
+import java.io.File;
+import trebes.rollplay.app.RollplayApp;
 
 @SuppressWarnings("serial")
-public class RollplayDataString extends JTextField implements FocusListener, RollplayData {
-	public RollplayDataString() {
-		addFocusListener(this);
-	}
-	
-	@Override
-	public void read(DataInputStream input) throws IOException {
-		byte[] data = new byte[input.readInt()];
-		input.read(data);
-		setText(new String(data));
+public class RollplaySheetDND5 extends RollplaySheet {
+
+	public RollplaySheetDND5(RollplayApp app, File file) {
+		super(app, file);
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void write(DataOutputStream output) throws IOException {
-		byte[] data = getText().getBytes();
-		output.writeInt(data.length);
-		output.write(data);
+	public void onFocus() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void focusGained(FocusEvent event) {
-		setSelectionStart(0);
-		setSelectionEnd(getText().length());
+	public boolean close() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
-	public void focusLost(FocusEvent event) {
-		setSelectionStart(0);
-		setSelectionEnd(0);
+	public boolean isEdited() {
+		// TODO Auto-generated method stub
+		return false;
 	}
+
+	@Override
+	public boolean save() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean saveAs() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

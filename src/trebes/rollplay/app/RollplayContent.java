@@ -25,11 +25,18 @@
 
 package trebes.rollplay.app;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import javax.swing.JFileChooser;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import trebes.rollplay.data.RollplayFile;
+import trebes.rollplay.sheet.*;
 
 @SuppressWarnings("serial")
 public class RollplayContent extends JTabbedPane implements ActionListener, ChangeListener {
@@ -51,8 +58,12 @@ public class RollplayContent extends JTabbedPane implements ActionListener, Chan
 			if (fileCloseAll()) {
 				System.exit(0);
 			}
-		} else if (command.contentEquals(FILE_NEW)) {
-			fileNew();
+		} else if (command.contentEquals(FILE_NEW_DND5)) {
+			fileNew(RollplayFile.Type.DND5);
+		} else if (command.contentEquals(FILE_NEW_SWN0)) {
+			fileNew(RollplayFile.Type.SWN0);
+		} else if (command.contentEquals(FILE_NEW_SWNR)) {
+			fileNew(RollplayFile.Type.SWNR);
 		} else if (command.contentEquals(FILE_OPEN)) {
 			fileOpen();
 		} else if (command.contentEquals(FILE_SAVE)) {
@@ -70,51 +81,122 @@ public class RollplayContent extends JTabbedPane implements ActionListener, Chan
 		add(tab);
 		int index = indexOfComponent(tab);
 		setTabComponentAt(index,tab.getHeader());
-		tab.onFocus();
 	}
 	
 	public boolean fileClose() {
-		return false; // TODO
+		Component selected = this.getSelectedComponent();
+		if (selected != null) {
+			RollplayTab tab = (RollplayTab)selected;
+			if (!tab.close()) {
+				return false;
+			}
+			remove(tab);
+		}
+		return true;
 	}
 	
 	public boolean fileCloseAll() {
-		return false; // TODO
+		while (getTabCount() > 0) {
+			RollplayTab tab = (RollplayTab)getComponentAt(0);
+			if (!tab.close()) {
+				return false;
+			}
+			remove(tab);
+		}
+		addTab(new RollplayWelcome(app));
+		return true;
 	}
 	
-	public void fileNew() {
-		
+	public void fileNew(RollplayFile.Type type) {
+		JFileChooser fc = getFileChooser();
+		fc.setDialogTitle("New Character Sheet");
+		fc.setSelectedFile(new File("Untitled.rps"));
+		int value = fc.showOpenDialog(app.getFrame());
+		if (value == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			if (file.getPath().isEmpty()) {
+				return;
+			}
+			RollplaySheet sheet;
+			if (type == RollplayFile.Type.DND5) {
+				sheet = new RollplaySheetDND5(app,file);
+			} else if (type == RollplayFile.Type.SWN0) {
+				sheet = new RollplaySheetSWN0(app,file);
+			} else if (type == RollplayFile.Type.SWNR) {
+				sheet = new RollplaySheetSWNR(app,file);
+			} else {
+				return;
+			}
+			addTab(sheet);
+		}
 	}
 	
 	public void fileOpen() {
-		
+		JFileChooser fc = getFileChooser();
+		fc.setDialogTitle("Open Character Sheet");
+		int value = fc.showOpenDialog(app.getFrame());
+		if (value == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			if (file.getPath().isEmpty()) {
+				return;
+			}
+			RollplaySheet sheet = RollplaySheet.open(app,file);
+			if (sheet != null) {
+				addTab(sheet);
+			}
+		}
 	}
 	
 	public void fileSave() {
-		
+		Component selected = this.getSelectedComponent();
+		if (selected != null) {
+			((RollplayTab)selected).save();
+		}
 	}
 	
 	public void fileSaveAll() {
-		
+		int count = getTabCount();
+		for (int n = 0; n < count; ++n) {
+			((RollplayTab)getComponentAt(n)).save();
+		}
 	}
 	
 	public void fileSaveAs() {
-		
+		Component selected = this.getSelectedComponent();
+		if (selected != null) {
+			((RollplayTab)selected).saveAs();
+		}
 	}
 	
 	@Override
 	public void stateChanged(ChangeEvent event) {
 		if (getTabCount() == 0) {
 			System.exit(0);
+		} else {
+			((RollplayTab)getSelectedComponent()).onFocus();
 		}
+	}
+	
+	public static JFileChooser getFileChooser() {
+		JFileChooser fc = new JFileChooser();
+		fc.setFileFilter(filter);
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMinimumSize(new Dimension(800,600));
+		return fc;
 	}
 	
 	public static final String FILE_CLOSE = "fc";
 	public static final String FILE_CLOSE_ALL = "fca";
 	public static final String FILE_EXIT = "fe";
-	public static final String FILE_NEW = "fn";
+	public static final String FILE_NEW_DND5 = "fnd";
+	public static final String FILE_NEW_SWN0 = "fn0";
+	public static final String FILE_NEW_SWNR = "fnr";
 	public static final String FILE_OPEN = "fo";
 	public static final String FILE_SAVE = "fs";
 	public static final String FILE_SAVE_ALL = "fsa";
 	public static final String FILE_SAVE_AS = "fsas";
 	public static final String HELP_WELCOME = "hw";
+	
+	private static final FileNameExtensionFilter filter =
+		new FileNameExtensionFilter("RollPlay sheet (*.rps)","rps");
 }

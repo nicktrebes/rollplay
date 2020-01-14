@@ -27,9 +27,9 @@ package trebes.rollplay.menu;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-
 import trebes.rollplay.app.RollplayApp;
 import trebes.rollplay.app.RollplayContent;
+import trebes.rollplay.data.RollplayFile;
 
 @SuppressWarnings("serial")
 public class RollplayMenuFile extends JMenu {
@@ -44,7 +44,12 @@ public class RollplayMenuFile extends JMenu {
 		
 		RollplayContent content = app.getContent();
 		
-		add(new FileNew(content));
+		JMenu fileNew = new JMenu("New");
+		fileNew.add(new FileNewDND5(content));
+		fileNew.add(new FileNewSWN0(content));
+		fileNew.add(new FileNewSWNR(content));
+		
+		add(fileNew);
 		add(new FileOpen(content));
 		
 		addSeparator();
@@ -95,11 +100,27 @@ public class RollplayMenuFile extends JMenu {
 		}
 	}
 	
-	private class FileNew extends JMenuItem {
-		public FileNew(RollplayContent content) {
-			super("New...");
+	private class FileNewDND5 extends JMenuItem {
+		public FileNewDND5(RollplayContent content) {
+			super(RollplayFile.Type.DND5.toString());
 			addActionListener(content);
-			setActionCommand(RollplayContent.FILE_NEW);
+			setActionCommand(RollplayContent.FILE_NEW_DND5);
+		}
+	}
+	
+	private class FileNewSWN0 extends JMenuItem {
+		public FileNewSWN0(RollplayContent content) {
+			super(RollplayFile.Type.SWN0.toString());
+			addActionListener(content);
+			setActionCommand(RollplayContent.FILE_NEW_SWN0);
+		}
+	}
+	
+	private class FileNewSWNR extends JMenuItem {
+		public FileNewSWNR(RollplayContent content) {
+			super(RollplayFile.Type.SWNR.toString());
+			addActionListener(content);
+			setActionCommand(RollplayContent.FILE_NEW_SWNR);
 		}
 	}
 	

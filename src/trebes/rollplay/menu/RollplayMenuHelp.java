@@ -101,12 +101,13 @@ public class RollplayMenuHelp extends JMenu {
 			try {
 				BufferedReader license = new BufferedReader(
 					new InputStreamReader(getClass().getResourceAsStream("/LICENSE")));
-				String line;
-				do {
-					line = license.readLine();
+				for (
+					String line = license.readLine();
+					line != null; line = license.readLine()
+				) {
 					aboutText.append(line);
 					aboutText.append('\n');
-				} while (line != null);
+				}
 			} catch (IOException exception) {}
 			
 			return aboutText.toString();

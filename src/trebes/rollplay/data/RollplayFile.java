@@ -26,6 +26,23 @@
 package trebes.rollplay.data;
 
 public class RollplayFile {
+	public static enum Type {
+		DND5("Dungeons and Dragons 5E"),
+		SWN0("Stars Without Number"),
+		SWNR("Stars Without Number (Revised)");
+		
+		private String name;
+		
+		private Type(String name) {
+			this.name = name;
+		}
+		
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
+	
 	public static final byte[] SIG_DND5 = {0x44,0x4E,0x44,0x35};
 	public static final byte[] SIG_SWN0 = {0x53,0x57,0x4E,0x30};
 	public static final byte[] SIG_SWNR = {0x53,0x57,0x4E,0x52};

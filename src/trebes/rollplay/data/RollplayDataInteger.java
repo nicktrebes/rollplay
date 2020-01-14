@@ -25,6 +25,7 @@
 
 package trebes.rollplay.data;
 
+import java.awt.event.FocusEvent;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
@@ -36,18 +37,54 @@ public class RollplayDataInteger extends RollplayDataString {
 	}
 	
 	public int getValue() {
-		return Integer.parseInt(getText());
+		String text = getText();
+		return (text.isEmpty() ?
+			0 : Integer.parseInt(getText()));
 	}
 	
-	private static InputVerifier verifier = new InputVerifier() {
+	private static final InputVerifier verifier = new InputVerifier() {
 		@Override
 		public boolean verify(JComponent input) {
-			try {
-				Integer.parseInt(((JTextField)input).getText());
-			} catch (NumberFormatException exception) {
-				return false;
+			String text = ((JTextField)input).getText();
+			if (!text.isEmpty()) {
+				try {
+					Integer.parseInt(text);
+				} catch (NumberFormatException exception) {
+					return false;
+				}
 			}
 			return true;
 		}
 	};
+	
+	public static class ForceSign extends RollplayDataInteger {
+		@Override
+		public void focusLost(FocusEvent event) {
+			super.focusLost(event);
+			int value = getValue();
+			if (value > 0) {
+				setText("+" + value);
+			}
+		}		
+	}
+	
+	public static class NonNeg extends RollplayDataInteger {
+		@Override
+		public void focusLost(FocusEvent event) {
+			super.focusLost(event);
+			if (getValue() < 0) {
+				setText("");
+			}
+		}
+	}
+	
+	public static class Positive extends RollplayDataInteger {
+		@Override
+		public void focusLost(FocusEvent event) {
+			super.focusLost(event);
+			if (getValue() <= 0) {
+				setText("");
+			}
+		}
+	}
 }
